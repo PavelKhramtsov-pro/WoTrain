@@ -2,13 +2,13 @@ package com.example.WoTrain.service.classInplement;
 
 import com.example.WoTrain.entity.POJORequest.Request;
 import com.example.WoTrain.entity.POJORequest.SvyaznoyRequest;
-import com.example.WoTrain.entity.POJOResponse.OzonResponse;
 import com.example.WoTrain.entity.POJOResponse.SvyaznoyResponse;
 import com.example.WoTrain.service.intefaces.TicketService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
@@ -20,13 +20,14 @@ import java.util.List;
 @Log4j2
 public  class SvyaznoyService implements TicketService<SvyaznoyResponse,SvyaznoyRequest> {
     private final RestTemplate restTemplate = new RestTemplate();
-    String URLOzon = "https://www.svyaznoy.travel/rway/api/1.0.0/get-trains";
+    @Value("${service.Svyaznoy}")
+    String SvyaznoyOzon;
     private final ObjectMapper objectMapper = new ObjectMapper();
     @Override
     public List<SvyaznoyResponse> getResponse(SvyaznoyRequest request) {
 
         HttpEntity<Request> httpEntity = new HttpEntity<>(request);
-        String response = restTemplate.exchange(URLOzon, HttpMethod.POST,httpEntity,String.class).getBody();
+        String response = restTemplate.exchange(SvyaznoyOzon, HttpMethod.POST,httpEntity,String.class).getBody();
         try {
             JsonNode jsonNode = objectMapper.readTree(response);
             JsonNode trains = jsonNode.findValue("trains");

@@ -1,5 +1,6 @@
 package com.example.WoTrain.entity.POJOResponse;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -17,6 +18,7 @@ import java.util.List;
         "tariffs"
 })
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class OzonResponse {
 
     @JsonProperty("arrivalStation.code")
@@ -40,6 +42,7 @@ public class OzonResponse {
             "min"
     })
     @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
      public class Tariff {
         @JsonProperty("category")
         private String category;

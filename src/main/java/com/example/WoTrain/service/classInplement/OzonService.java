@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,8 @@ import java.util.List;
 @Log4j2
 public class OzonService implements TicketService<OzonResponse,OzonRequest> {
     private final RestTemplate restTemplate = new RestTemplate();
-    String URLOzon = "https://www.ozon.travel/graphql";
+    @Value("${service.Ozon}")
+    String URLOzon;
     private final ObjectMapper objectMapper = new ObjectMapper();
     @Override
     public List<OzonResponse> getResponse(OzonRequest request) {
