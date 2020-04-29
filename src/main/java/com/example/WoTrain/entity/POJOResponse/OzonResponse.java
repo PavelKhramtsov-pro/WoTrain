@@ -19,7 +19,7 @@ import java.util.List;
 })
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class OzonResponse {
+public class OzonResponse implements Response{
 
     @JsonProperty("arrivalStation.code")
     private String codeArrivalStation;
@@ -42,7 +42,6 @@ public class OzonResponse {
             "min"
     })
     @Data
-    @JsonIgnoreProperties(ignoreUnknown = true)
      public class Tariff {
         @JsonProperty("category")
         private String category;

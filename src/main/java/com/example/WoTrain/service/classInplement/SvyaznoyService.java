@@ -20,14 +20,16 @@ import java.util.List;
 @Log4j2
 public  class SvyaznoyService implements TicketService<SvyaznoyResponse,SvyaznoyRequest> {
     private final RestTemplate restTemplate = new RestTemplate();
-    @Value("${service.Svyaznoy}")
-    String SvyaznoyOzon;
+    @Value("${service.svyaznoy}")
+    String URLSvyaznoy;
     private final ObjectMapper objectMapper = new ObjectMapper();
     @Override
     public List<SvyaznoyResponse> getResponse(SvyaznoyRequest request) {
 
         HttpEntity<Request> httpEntity = new HttpEntity<>(request);
-        String response = restTemplate.exchange(SvyaznoyOzon, HttpMethod.POST,httpEntity,String.class).getBody();
+        String response = restTemplate
+                .exchange(URLSvyaznoy, HttpMethod.POST,httpEntity,String.class)
+                .getBody();
         try {
             JsonNode jsonNode = objectMapper.readTree(response);
             JsonNode trains = jsonNode.findValue("trains");
@@ -35,7 +37,8 @@ public  class SvyaznoyService implements TicketService<SvyaznoyResponse,Svyaznoy
 
             for (int i = 0; i < trains.size(); i++) {
 
-                SvyaznoyResponse svyaznoyResponse = new SvyaznoyResponse();//objectMapper.readValue(segments.get(i).get(0).toString(), OzonResponse.class);
+                //SvyaznoyResponse svyaznoyResponse = objectMapper.readValue(trains.get(i).toString(), SvyaznoyResponse.class);
+                SvyaznoyResponse svyaznoyResponse = new SvyaznoyResponse();
                 JsonNode train = trains.get(i);
                 List<SvyaznoyResponse.Coupe> listCope = new ArrayList<>();
                 svyaznoyResponse.setCodeArrival(train.findValue("stations").findValue("depart").findValue("code").toString());
@@ -47,6 +50,7 @@ public  class SvyaznoyService implements TicketService<SvyaznoyResponse,Svyaznoy
                 svyaznoyResponse.setTrainNum(train.findValue("trainNum").toString());
                 for (JsonNode node:train.findValue("coupes")) {
                     SvyaznoyResponse.Coupe coupe =  svyaznoyResponse.new Coupe();
+                    //SvyaznoyResponse.Coupe coupe = objectMapper.readValue(node.get(0).toString(), SvyaznoyResponse.Coupe.class);
                     coupe.setPlaces(node.findValue("places").toString());
                     coupe.setType(node.findValues("type").get(1).toString());
                     coupe.setPrice(node.findValue("price").toString());

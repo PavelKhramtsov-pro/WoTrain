@@ -23,7 +23,7 @@ import java.util.List;
 })
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SvyaznoyResponse {
+public class SvyaznoyResponse implements Response{
    @JsonProperty("coupes")
    private List<Coupe> coupes = null;
    @JsonProperty("trainNum")
