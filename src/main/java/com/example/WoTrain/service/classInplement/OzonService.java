@@ -27,13 +27,15 @@ public class OzonService implements TicketService<OzonResponse,OzonRequest> {
     @Override
     public List<OzonResponse> getResponse(OzonRequest request) {
         HttpEntity<Request> httpEntity = new HttpEntity<>(request);
+        List<OzonResponse> ozonResponses = new ArrayList<>();
         String response = restTemplate
                 .exchange(URLOzon, HttpMethod.POST,httpEntity,String.class)
                 .getBody();
+        log.error(request);
         try {
             JsonNode jsonNode = objectMapper.readTree(response);
             List<JsonNode> segments = jsonNode.findValues("segments");
-            List<OzonResponse> ozonResponses = new ArrayList<>();
+
             List<JsonNode> tariffs = jsonNode.findValues("tariffs");
             for (int i = 0; i < segments.size(); i++) {
                 OzonResponse ozonResponse = objectMapper.readValue(segments.get(i).get(0).toString(), OzonResponse.class);
@@ -58,6 +60,6 @@ public class OzonService implements TicketService<OzonResponse,OzonRequest> {
         } catch (JsonProcessingException e) {
             log.error("Error when parsing Ozon Travel response", e);
         }
-        return null;
+        return ozonResponses;
     }
 }

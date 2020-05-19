@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
@@ -24,16 +25,17 @@ public  class SvyaznoyService implements TicketService<SvyaznoyResponse,Svyaznoy
     String URLSvyaznoy;
     private final ObjectMapper objectMapper = new ObjectMapper();
     @Override
-    public List<SvyaznoyResponse> getResponse(SvyaznoyRequest request) {
+    public List<SvyaznoyResponse> getResponse( SvyaznoyRequest request) {
 
         HttpEntity<Request> httpEntity = new HttpEntity<>(request);
         String response = restTemplate
                 .exchange(URLSvyaznoy, HttpMethod.POST,httpEntity,String.class)
                 .getBody();
+        List<SvyaznoyResponse> svyaznoyResponses = new ArrayList<>();
         try {
             JsonNode jsonNode = objectMapper.readTree(response);
             JsonNode trains = jsonNode.findValue("trains");
-            List<SvyaznoyResponse> svyaznoyResponses = new ArrayList<>();
+
 
             for (int i = 0; i < trains.size(); i++) {
 
@@ -66,6 +68,6 @@ public  class SvyaznoyService implements TicketService<SvyaznoyResponse,Svyaznoy
             log.error("Error when parsing Ozon Travel response", e);
         }
         //log.error(response);
-        return null;
+        return svyaznoyResponses;
     }
 }
